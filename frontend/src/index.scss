@@ -1,0 +1,16 @@
+* {
+    margin: 0;
+}
+
+.content {
+    min-height: calc(100vh - 185px) !important;
+}
+
+.file-upload {
+    width: 500px;
+    margin-top: 20px;
+
+    &__button {
+        margin-top: 20px;
+    }
+}

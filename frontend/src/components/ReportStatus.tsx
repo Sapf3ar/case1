@@ -2,10 +2,10 @@ import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useStores } from '../hooks/useStores';
 
-const Page1 = observer(() => {
+const ReportStatus = observer(() => {
     const { rootStore } = useStores();
 
-    return <div>{rootStore.isLoading ? 'loading...' : 'loaded'}</div>;
+    return <div>{rootStore.reportUid}</div>;
 });
 
-export default Page1;
+export default ReportStatus;
