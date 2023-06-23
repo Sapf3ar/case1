@@ -9,7 +9,7 @@ import Root from './root';
 export const router = createBrowserRouter([
     {
         path: '/',
-        element: <Root />,
+        element: <Page1 />,
     },
     {
         path: '/page2',
