@@ -24,6 +24,7 @@ import FileList from '../components/FileList';
 import { SettingOutlined } from '@ant-design/icons';
 import { useParams } from 'react-router-dom';
 import FileErrors from '../components/FileErrors';
+import { API_URL } from '../config';
 
 const { Title } = Typography;
 
@@ -44,21 +45,28 @@ const Report = observer(() => {
                 calculateProgress(rootStore.report?.filesCount, rootStore.report?.checkedCount) !==
                 100
             ) {
+                const maxRetry = 10;
+                let retry = 0;
+
                 const interval = setInterval(() => {
                     const newProgress = calculateProgress(
                         rootStore.report?.filesCount,
                         rootStore.report?.checkedCount
                     );
 
+                    if (retry >= maxRetry) {
+                        clearInterval(interval);
+                    }
+                    retry++;
+
                     if (newProgress !== 100) {
                         rootStore.fetchReports(id);
                         setProgress(newProgress);
                     } else {
                         setProgress(100);
-
                         clearInterval(interval);
                     }
-                }, 1000);
+                }, 5000);
             } else {
                 setProgress(100);
             }
@@ -81,7 +89,7 @@ const Report = observer(() => {
 
         const files = rootStore.report.files;
 
-        return files.map((file) => {
+        return files?.map((file) => {
             return {
                 key: file.id,
                 label: file.filename,
@@ -172,20 +180,24 @@ const Report = observer(() => {
 
                     <Row style={{ marginTop: 20 }}>
                         <Space wrap>
-                            <Button
-                                // disabled={progress === 100 ? false : true}
-                                icon={<DownloadOutlined />}
-                                type='primary'
-                            >
-                                Загрузить отчет .csv
-                            </Button>
-                            <Button
-                                // disabled={progress === 100 ? false : true}
-                                icon={<DownloadOutlined />}
-                                type='default'
-                            >
-                                Загрузить отчет .pdf
-                            </Button>
+                            <a href={`${API_URL}/get-csv/${id}`} target='_blank' rel='noreferrer'>
+                                <Button
+                                    // disabled={progress === 100 ? false : true}
+                                    icon={<DownloadOutlined />}
+                                    type='primary'
+                                >
+                                    Загрузить отчет .csv
+                                </Button>
+                            </a>
+                            <a href={`${API_URL}/get-pdf/${id}`} target='_blank' rel='noreferrer'>
+                                <Button
+                                    // disabled={progress === 100 ? false : true}
+                                    icon={<DownloadOutlined />}
+                                    type='default'
+                                >
+                                    Загрузить отчет .pdf
+                                </Button>
+                            </a>
                             {progress !== 100 && (
                                 <p>Загрузка будет доступна после обработки всех файлов</p>
                             )}
@@ -196,7 +208,7 @@ const Report = observer(() => {
                         <Col span={6}>
                             <FileList files={rootStore.report?.files} />
                         </Col>
-                        <Col span={16}>
+                        <Col span={18}>
                             <Collapse
                                 defaultActiveKey={['1']}
                                 expandIconPosition={'start'}

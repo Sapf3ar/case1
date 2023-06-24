@@ -23,7 +23,7 @@ const FileUpload = () => {
             .then((data) => {
                 setFileList([]);
 
-                rootStore.setReportId(data.id);
+                rootStore.setReportId(data.transaction_id);
 
                 message.success('Файлы успешно загружены. Производится обработка.');
             })

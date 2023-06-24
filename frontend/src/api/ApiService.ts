@@ -13,17 +13,19 @@ class ApiService {
 
         console.log(formData, fileList);
 
-        const response = await axios.get<UploadFileResponse>(`./mock/upload-file-response.json`);
-        // const response = await axios.post<UploadFileResponse>(`${API_URL}/upload`, formData);
+        // const response = await axios.get<UploadFileResponse>(`./mock/upload-file-response.json`);
+        const response = await axios.post<UploadFileResponse>(`${API_URL}/upload`, formData);
 
         return response.data;
     }
 
     public async fetchReports(transactionId: string): Promise<ReportsResponse> {
-        const response = await axios.get<ReportsResponse>(`./reports-transaction.json`);
-        // const response = await axios.get<UploadFileResponse>(`${API_URL}/reports/${transactionId}`);
+        // const response = await axios.get<ReportsResponse>(`./reports-transaction.json`);
+        const response = await axios.get<ReportsResponse>(`${API_URL}/reports/${transactionId}`);
 
-        return response.data;
+        console.log(response.data);
+
+        return response.data[0];
     }
 }
 

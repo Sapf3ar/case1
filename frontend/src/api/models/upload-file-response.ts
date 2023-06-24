@@ -1,3 +1,3 @@
 export interface UploadFileResponse {
-    id: string;
+    transaction_id: string;
 }
