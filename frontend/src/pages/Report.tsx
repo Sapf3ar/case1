@@ -1,7 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useStores } from '../hooks/useStores';
-
 import {
     Breadcrumb,
     Card,
@@ -12,13 +11,17 @@ import {
     Collapse,
     CollapseProps,
     Typography,
+    Space,
+    Button,
 } from 'antd';
 import FileUpload from '../components/FileUpload';
-
+import { DownloadOutlined } from '@ant-design/icons';
 import ReportStatus from '../components/ReportStatus';
 import FileList from '../components/FileList';
 
 import { SettingOutlined } from '@ant-design/icons';
+import { useParams } from 'react-router-dom';
+import FileErrors from '../components/FileErrors';
 
 const { Title } = Typography;
 
@@ -26,6 +29,11 @@ const { Header, Content, Footer } = Layout;
 
 const Report = observer(() => {
     const { rootStore } = useStores();
+    const { id } = useParams<{ id: string }>();
+
+    React.useEffect(() => {
+        rootStore.fetchReports(id);
+    }, []);
 
     const genExtra = () => (
         <SettingOutlined
@@ -36,26 +44,24 @@ const Report = observer(() => {
         />
     );
 
-    const items: CollapseProps['items'] = [
-        {
-            key: '1',
-            label: 'Файл 1',
-            children: <div>text</div>,
-            extra: genExtra(),
-        },
-        {
-            key: '2',
-            label: 'Файл 2',
-            children: <div>text</div>,
-            extra: genExtra(),
-        },
-        {
-            key: '3',
-            label: 'Файл 3',
-            children: <div>text</div>,
-            extra: genExtra(),
-        },
-    ];
+    const getItems = (): CollapseProps['items'] => {
+        if (!rootStore?.report) {
+            return [];
+        }
+
+        const files = rootStore.report.files;
+
+        return files.map((file) => {
+            return {
+                key: file.id,
+                label: file.filename,
+                extra: genExtra(),
+                children: (
+                    <FileErrors refference={rootStore.report?.reference} errors={file.errors} />
+                ),
+            };
+        });
+    };
 
     return (
         <Layout>
@@ -83,8 +89,8 @@ const Report = observer(() => {
                     <Title level={2}>Обработанные файлы</Title>
 
                     <Typography.Paragraph>
-                        Наименование объекта капитального строительства – «Строительство и
-                        обустройство скважин куста № 10 Гарюшкинского месторождения»
+                        Наименование объекта капитального строительства –{' '}
+                        {rootStore.report?.reference}
                     </Typography.Paragraph>
 
                     <Row gutter={16}>
@@ -92,8 +98,8 @@ const Report = observer(() => {
                             <Card bordered={false}>
                                 <Statistic
                                     title='Обработано файлов'
-                                    value={11.28}
-                                    precision={2}
+                                    value={rootStore.report?.filesCount}
+                                    precision={0}
                                     valueStyle={{ color: '#3f8600' }}
                                 />
                             </Card>
@@ -102,9 +108,9 @@ const Report = observer(() => {
                             <Card bordered={false}>
                                 <Statistic
                                     title='Найдено совпадений'
-                                    value={9.3}
-                                    precision={2}
-                                    valueStyle={{ color: '#cf1322' }}
+                                    value={rootStore.report?.matchCount}
+                                    precision={0}
+                                    valueStyle={{ color: '#3f8600' }}
                                 />
                             </Card>
                         </Col>
@@ -112,23 +118,34 @@ const Report = observer(() => {
                             <Card bordered={false}>
                                 <Statistic
                                     title='Найдено ошибок'
-                                    value={9.3}
-                                    precision={2}
+                                    value={rootStore.report?.errorsCount}
+                                    precision={0}
                                     valueStyle={{ color: '#cf1322' }}
                                 />
                             </Card>
                         </Col>
                     </Row>
 
+                    <Row style={{ marginTop: 20 }}>
+                        <Space wrap>
+                            <Button icon={<DownloadOutlined />} type='primary'>
+                                Загрузить отчет .csv
+                            </Button>
+                            <Button icon={<DownloadOutlined />} type='default'>
+                                Загрузить отчет .pdf
+                            </Button>
+                        </Space>
+                    </Row>
+
                     <Row className='report__files' gutter={16}>
                         <Col span={6}>
-                            <FileList />
+                            <FileList files={rootStore.report?.files} />
                         </Col>
                         <Col span={16}>
                             <Collapse
                                 defaultActiveKey={['1']}
-                                expandIconPosition={'left'}
-                                items={items}
+                                expandIconPosition={'start'}
+                                items={getItems()}
                             />
                         </Col>
                     </Row>

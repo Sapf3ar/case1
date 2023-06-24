@@ -3,24 +3,30 @@ import React from 'react';
 import { CarryOutOutlined } from '@ant-design/icons';
 
 import type { DataNode, TreeProps } from 'antd/es/tree';
+import { ProcessedFile } from '../api/models';
 
 const { Search } = Input;
-const treeData: DataNode[] = [
-    {
-        title: 'parent 1-1',
-        key: '0-0-1',
-    },
-    {
-        title: 'parent 1-2',
-        key: '0-0-2',
-    },
-    {
-        title: 'parent 1-3',
-        key: '0-0-3',
-    },
-];
 
-const FileList = () => {
+type Props = {
+    files: ProcessedFile[];
+};
+
+const FileList = ({ files }: Props) => {
+    const [searchValue, setSearchValue] = React.useState('');
+
+    const getTreeData = (): DataNode[] => {
+        return files
+            ?.filter((file) => {
+                return file.filename.includes(searchValue);
+            })
+            .map((file) => {
+                return {
+                    title: file.filename,
+                    key: file.id,
+                };
+            });
+    };
+
     return (
         <>
             <Card className='file-list' title='Файлы' bordered={true} style={{ width: 300 }}>
@@ -28,9 +34,15 @@ const FileList = () => {
                     <Search
                         style={{ marginBottom: 8 }}
                         placeholder='Поиск'
-                        onChange={() => console.log('search')}
+                        onChange={(event) => setSearchValue(event.target.value)}
                     />
-                    <Tree showLine={true} treeData={treeData} />
+                    <Tree
+                        onSelect={([selectedKeys]) => {
+                            console.log(selectedKeys);
+                        }}
+                        showLine={true}
+                        treeData={getTreeData()}
+                    />
                 </div>
             </Card>
         </>
