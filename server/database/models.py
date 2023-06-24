@@ -37,6 +37,3 @@ class Error(BaseModel):
     match = IntegerField(null=True)
     page = IntegerField(null=True)
     line = IntegerField(null=True)
-
-
-db.create_tables([Transaction, Report, File, Error])
