@@ -5,7 +5,7 @@ import connexion
 import pdfkit
 import six
 from werkzeug.utils import secure_filename
-from flask import request
+from flask import request, send_from_directory
 from server.models.inline_response200 import InlineResponse200  # noqa: E501
 from server.models.report import Report  # noqa: E501
 from server import util
@@ -27,18 +27,26 @@ def get_csv_transaction_id_get(transaction_id):  # noqa: E501
     """
     return 'do some magic!'
 
-
 def get_pdf_transaction_id_get(transaction_id):  # noqa: E501
     """Скачать PDF-файл отчета
 
      # noqa: E501
 
     :param transaction_id: ID транзакции
-    :type transaction_id: int
+    :type transaction_id: str
 
     :rtype: file
     """
-    return 'do some magic!'
+    transaction = db_models.Transaction.get(db_models.Transaction.id == transaction_id)
+
+    reports = transaction.reports
+    files = []
+    for report in reports:
+        files.extend(map(lambda x: x.filename, report.files))
+
+    file = files[0]
+
+    return send_from_directory('data', file, as_attachment=True), 200
 
 
 def report_report_id_get(report_id):  # noqa: E501
@@ -51,7 +59,7 @@ def report_report_id_get(report_id):  # noqa: E501
 
     :rtype: Report
     """
-    return 'do some magic!'
+    return 'do some magic!', 200
 
 
 def reports_transaction_id_get(transaction_id):

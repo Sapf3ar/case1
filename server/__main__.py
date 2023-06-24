@@ -6,7 +6,6 @@ from server import encoder
 from flask_cors import CORS
 import server.database.models
 
-
 def main():
     app = connexion.App(__name__, specification_dir='./openapi/')
     CORS(app.app)
