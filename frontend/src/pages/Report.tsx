@@ -13,6 +13,8 @@ import {
     Typography,
     Space,
     Button,
+    Progress,
+    Spin,
 } from 'antd';
 import FileUpload from '../components/FileUpload';
 import { DownloadOutlined } from '@ant-design/icons';
@@ -27,12 +29,40 @@ const { Title } = Typography;
 
 const { Header, Content, Footer } = Layout;
 
+const calculateProgress = (totalFiles, processedFiles) => {
+    return Math.round((processedFiles / totalFiles) * 100);
+};
+
 const Report = observer(() => {
     const { rootStore } = useStores();
     const { id } = useParams<{ id: string }>();
+    const [progress, setProgress] = React.useState(0);
 
     React.useEffect(() => {
-        rootStore.fetchReports(id);
+        rootStore.fetchReports(id).then(() => {
+            if (
+                calculateProgress(rootStore.report?.filesCount, rootStore.report?.checkedCount) !==
+                100
+            ) {
+                const interval = setInterval(() => {
+                    const newProgress = calculateProgress(
+                        rootStore.report?.filesCount,
+                        rootStore.report?.checkedCount
+                    );
+
+                    if (newProgress !== 100) {
+                        rootStore.fetchReports(id);
+                        setProgress(newProgress);
+                    } else {
+                        setProgress(100);
+
+                        clearInterval(interval);
+                    }
+                }, 1000);
+            } else {
+                setProgress(100);
+            }
+        });
     }, []);
 
     const genExtra = () => (
@@ -86,6 +116,20 @@ const Report = observer(() => {
                     className='content'
                     style={{ padding: 24, minHeight: 380, background: '#ffffff' }}
                 >
+                    <Row>
+                        {progress !== 100 && (
+                            <Col span={1}>
+                                <Spin />
+                            </Col>
+                        )}
+                        <Col span={progress !== 100 ? 23 : 24}>
+                            <Progress
+                                style={{ width: '100%' }}
+                                percent={progress}
+                                status={progress === 100 ? 'success' : 'active'}
+                            />
+                        </Col>
+                    </Row>
                     <Title level={2}>Обработанные файлы</Title>
 
                     <Typography.Paragraph>
@@ -128,12 +172,23 @@ const Report = observer(() => {
 
                     <Row style={{ marginTop: 20 }}>
                         <Space wrap>
-                            <Button icon={<DownloadOutlined />} type='primary'>
+                            <Button
+                                // disabled={progress === 100 ? false : true}
+                                icon={<DownloadOutlined />}
+                                type='primary'
+                            >
                                 Загрузить отчет .csv
                             </Button>
-                            <Button icon={<DownloadOutlined />} type='default'>
+                            <Button
+                                // disabled={progress === 100 ? false : true}
+                                icon={<DownloadOutlined />}
+                                type='default'
+                            >
                                 Загрузить отчет .pdf
                             </Button>
+                            {progress !== 100 && (
+                                <p>Загрузка будет доступна после обработки всех файлов</p>
+                            )}
                         </Space>
                     </Row>
 
