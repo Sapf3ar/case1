@@ -15,6 +15,7 @@ import server.database.models as db_models
 from server.models import Report
 import server.helpers.parsers as parsers
 
+
 def get_csv_transaction_id_get(transaction_id):  # noqa: E501
     """Скачать CSV-файл отчета
 
@@ -25,7 +26,13 @@ def get_csv_transaction_id_get(transaction_id):  # noqa: E501
 
     :rtype: file
     """
-    return 'do some magic!'
+    transaction = db_models.Transaction.get(db_models.Transaction.id == transaction_id)
+
+    reports = transaction.reports
+    file = f"report-{transaction_id}.csv"
+
+    return send_from_directory(f'files/report', file, as_attachment=True), 200
+
 
 def get_pdf_transaction_id_get(transaction_id):  # noqa: E501
     """Скачать PDF-файл отчета
@@ -40,13 +47,9 @@ def get_pdf_transaction_id_get(transaction_id):  # noqa: E501
     transaction = db_models.Transaction.get(db_models.Transaction.id == transaction_id)
 
     reports = transaction.reports
-    files = []
-    for report in reports:
-        files.extend(map(lambda x: x.filename, report.files))
+    file = f"report-{transaction_id}.pdf"
 
-    file = files[0]
-
-    return send_from_directory('data', file, as_attachment=True), 200
+    return send_from_directory(f'files/report',  file, as_attachment=True), 200
 
 
 def report_report_id_get(report_id):  # noqa: E501
@@ -119,9 +122,9 @@ def upload_post(file=None):  # noqa: E501
                 filename += f"_{db_file.id}_{transaction_id}.pdf"
 
                 db_file.filename = filename
-                file.save(os.path.join("./data", filename))
+                file.save(os.path.join("files/client", filename))
 
-                with open(os.path.join("./data", filename), "rb"):
+                with open(os.path.join("files/client", filename), "rb"):
                     pass
                 db_file.save()
                 files_count += 1

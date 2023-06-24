@@ -23,7 +23,7 @@ def db_errors_to_errors(db_errors) -> list:
 def db_file_to_file(db_file) -> File:
     file = File(
         id=db_file.id,
-        filename=db_file.filename,
+        filename="_".join(db_file.filename.split("_")[:-2]),
         is_checked=db_file.is_checked,
         errors=db_errors_to_errors(db_file.errors)
     )
