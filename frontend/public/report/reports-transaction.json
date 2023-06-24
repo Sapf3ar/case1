@@ -1,0 +1,54 @@
+{
+    "checkedCount": 3,
+    "errorsCount": 1,
+    "files": [
+      {
+        "errors": [
+          {
+            "description": "description",
+            "id": 1,
+            "line": 3,
+            "match": 7,
+            "page": 9,
+            "subject": "refference"
+          },
+          {
+            "description": "description",
+            "id": 2,
+            "line": 3,
+            "match": 7,
+            "page": 9,
+            "subject": "subject"
+          }
+        ],
+        "filename": "filename1",
+        "id": 1
+      },
+      {
+        "errors": [
+          {
+            "description": "description",
+            "id": 1,
+            "line": 3,
+            "match": 7,
+            "page": 9,
+            "subject": "subject"
+          },
+          {
+            "description": "description",
+            "id": 2,
+            "line": 3,
+            "match": 7,
+            "page": 9,
+            "subject": "subject"
+          }
+        ],
+        "filename": "filename2",
+        "id": 2
+      }
+    ],
+    "filesCount": 3,
+    "id": 0,
+    "matchCount": 5,
+    "reference": "reference"
+  }

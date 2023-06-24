@@ -1,0 +1,36 @@
+* {
+    margin: 0;
+}
+
+.content {
+    min-height: calc(100vh - 185px) !important;
+}
+
+.file-upload {
+    width: 500px;
+    margin-top: 20px;
+
+    &__button {
+        margin-top: 20px;
+    }
+}
+
+.report {
+    &__files {
+        margin-top: 40px;
+        display: flex;
+    }
+}
+
+.file-list {
+    width: 100% !important;
+}
+
+.file-errors {
+    &__description {
+        margin-top: 30px;
+        &:first-child {
+            margin-top: 0;
+        }
+    }
+}
