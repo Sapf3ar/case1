@@ -1,7 +1,7 @@
 import uuid
 
 from peewee import Model, AutoField, CharField, IntegerField, ForeignKeyField, TextField, UUIDField, BooleanField
-from database.base import db
+from server.database.base import db
 
 
 class BaseModel(Model):
