@@ -1,0 +1,163 @@
+openapi: '3.0.0'
+info:
+  version: '1.0.0'
+  title: 'API для анализа ошибок в файлах'
+  description: 'API для загрузки файлов, анализа ошибок в них и вывода ошибок в формате списка.'
+paths:
+  /upload:
+    post:
+      summary: 'Загрузить файл для анализа ошибок'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: 'Файл успешно загружен.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: 'ID загруженного файла.'
+        '400':
+          description: 'Предоставлен недействительный файл.'
+        '500':
+          description: 'Ошибка сервера при обработке файла.'
+  /report/{report-id}:
+    get:
+      summary: 'Получить отчет по конкретному файлу'
+      parameters:
+        - name: report-id
+          in: path
+          required: true
+          description: 'ID отчета'
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'Отчет о файле.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Report'
+        '400':
+          description: 'Предоставлен недействительный ID отчета.'
+        '404':
+          description: 'Отчет не найден для предоставленного ID.'
+        '500':
+          description: 'Ошибка сервера при обработке запроса.'
+  /get-csv/{transaction_id}:
+    get:
+      summary: 'Скачать CSV-файл отчета'
+      parameters:
+        - name: transaction_id
+          in: path
+          required: true
+          description: 'ID транзакции'
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'CSV-файл успешно скачан.'
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: 'Предоставлен недействительный ID транзакции.'
+        '404':
+          description: 'CSV-файл не найден для предоставленного ID транзакции.'
+        '500':
+          description: 'Ошибка сервера при обработке запроса.'
+  /get-pdf/{transaction_id}:
+    get:
+      summary: 'Скачать PDF-файл отчета'
+      parameters:
+        - name: transaction_id
+          in: path
+          required: true
+          description: 'ID транзакции'
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'PDF-файл успешно скачан.'
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: 'Предоставлен недействительный ID транзакции.'
+        '404':
+          description: 'PDF-файл не найден для предоставленного ID транзакции.'
+        '500':
+          description: 'Ошибка сервера при обработке запроса.'
+components:
+  schemas:
+    Report:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 'ID отчета.'
+        reference:
+          type: string
+          description: 'Ссылка на отчет.'
+        filesCount:
+          type: integer
+          description: 'Количество файлов в отчете.'
+        errorsCount:
+          type: integer
+          description: 'Количество ошибок в отчете.'
+        matchCount:
+          type: integer
+          description: 'Количество совпадений в отчете.'
+        files:
+          type: array
+          items:
+            $ref: '#/components/schemas/File'
+    File:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 'ID файла.'
+        filename:
+          type: string
+          description: 'Имя файла.'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+    Error:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 'ID ошибки.'
+        description:
+          type: string
+          description: 'Описание ошибки.'
+        subject:
+          type: string
+          description: 'Тема ошибки.'
+        match:
+          type: integer
+          description: 'Совпадение ошибки.'
+        page:
+          type: integer
+          description: 'Номер страницы ошибки в файле.'
+        line:
+          type: integer
+          description: 'Номер строки ошибки в файле.'
