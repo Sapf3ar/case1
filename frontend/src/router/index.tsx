@@ -3,7 +3,7 @@ import * as ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import Upload from '../pages/Upload';
-import Page2 from '../pages/page2';
+import Report from '../pages/Report';
 import Root from './root';
 
 export const router = createBrowserRouter([
@@ -12,7 +12,7 @@ export const router = createBrowserRouter([
         element: <Upload />,
     },
     {
-        path: '/page2',
-        element: <Page2 />,
+        path: '/report/:id',
+        element: <Report />,
     },
 ]);
