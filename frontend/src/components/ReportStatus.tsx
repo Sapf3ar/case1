@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite';
-import React from 'react';
+
 import { useStores } from '../hooks/useStores';
 import { Link } from 'react-router-dom';
 import { Button } from 'antd';

@@ -1,8 +1,8 @@
 import { observer } from 'mobx-react-lite';
-import React from 'react';
-import { useStores } from '../hooks/useStores';
 
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
+// import { useStores } from '../hooks/useStores';
+
+import { Breadcrumb, Layout } from 'antd';
 import FileUpload from '../components/FileUpload';
 
 import { Typography } from 'antd';
@@ -13,7 +13,7 @@ const { Title } = Typography;
 const { Header, Content, Footer } = Layout;
 
 const Upload = observer(() => {
-    const { rootStore } = useStores();
+    // const { rootStore } = useStores();
 
     return (
         <Layout>

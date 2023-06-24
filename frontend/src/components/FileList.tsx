@@ -1,8 +1,7 @@
 import { Card, Tree, Input } from 'antd';
 import React from 'react';
-import { CarryOutOutlined } from '@ant-design/icons';
 
-import type { DataNode, TreeProps } from 'antd/es/tree';
+import type { DataNode } from 'antd/es/tree';
 import { ProcessedFile } from '../api/models';
 
 const { Search } = Input;

@@ -1,5 +1,4 @@
 import { Descriptions } from 'antd';
-import React from 'react';
 import ReactDiffViewer from 'react-diff-viewer';
 // import { Error } from '../api/models/reports-response.ts';
 

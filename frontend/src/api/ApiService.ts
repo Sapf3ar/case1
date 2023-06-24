@@ -1,4 +1,4 @@
-import axios, { AxiosResponse, ResponseType } from 'axios';
+import axios from 'axios';
 import { API_URL } from '../config';
 import type { UploadFile } from 'antd';
 import { ReportsResponse, UploadFileResponse } from './models';

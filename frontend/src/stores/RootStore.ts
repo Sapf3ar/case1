@@ -1,5 +1,5 @@
 import { observable, runInAction, makeAutoObservable } from 'mobx';
-import { ReportsResponse, UploadFileResponse } from '../api/models';
+import { ReportsResponse } from '../api/models';
 import { ApiServiceInstanse } from '../api/ApiService';
 
 type selectedFileKey = number;

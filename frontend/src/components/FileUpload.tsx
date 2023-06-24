@@ -3,8 +3,6 @@ import { InboxOutlined } from '@ant-design/icons';
 import type { UploadFile, UploadProps } from 'antd';
 import { message, Upload, Button } from 'antd';
 
-import type { RcFile } from 'antd/es/upload/interface';
-import { set } from 'mobx';
 import { ApiServiceInstanse } from '../api/ApiService';
 import { useStores } from '../hooks/useStores';
 
@@ -45,6 +43,8 @@ const FileUpload = () => {
             setFileList(newFileList);
         },
         beforeUpload: (file, newfileList) => {
+            console.log(file);
+
             setFileList([...fileList, ...newfileList]);
 
             return false;

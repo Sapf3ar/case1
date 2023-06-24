@@ -16,9 +16,9 @@ import {
     Progress,
     Spin,
 } from 'antd';
-import FileUpload from '../components/FileUpload';
+
 import { DownloadOutlined } from '@ant-design/icons';
-import ReportStatus from '../components/ReportStatus';
+
 import FileList from '../components/FileList';
 
 import { SettingOutlined } from '@ant-design/icons';
