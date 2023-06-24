@@ -1,0 +1,314 @@
+openapi: 3.0.0
+info:
+  description: API для загрузки файлов, анализа ошибок в них и вывода ошибок в формате
+    списка.
+  title: API для анализа ошибок в файлах
+  version: 1.0.0
+servers:
+- url: /
+paths:
+  /get-csv/{transaction_id}:
+    get:
+      operationId: get_csv_transaction_id_get
+      parameters:
+      - description: ID транзакции
+        explode: false
+        in: path
+        name: transaction_id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            text/csv:
+              schema:
+                format: binary
+                type: string
+          description: CSV-файл успешно скачан.
+        "400":
+          description: Предоставлен недействительный ID транзакции.
+        "404":
+          description: CSV-файл не найден для предоставленного ID транзакции.
+        "500":
+          description: Ошибка сервера при обработке запроса.
+      summary: Скачать CSV-файл отчета
+      x-openapi-router-controller: server.controllers.default_controller
+  /get-pdf/{transaction_id}:
+    get:
+      operationId: get_pdf_transaction_id_get
+      parameters:
+      - description: ID транзакции
+        explode: false
+        in: path
+        name: transaction_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/pdf:
+              schema:
+                format: binary
+                type: string
+          description: PDF-файл успешно скачан.
+        "400":
+          description: Предоставлен недействительный ID транзакции.
+        "404":
+          description: PDF-файл не найден для предоставленного ID транзакции.
+        "500":
+          description: Ошибка сервера при обработке запроса.
+      summary: Скачать PDF-файл отчета
+      x-openapi-router-controller: server.controllers.default_controller
+  /report/{report-id}:
+    get:
+      operationId: report_report_id_get
+      parameters:
+      - description: ID отчета
+        explode: false
+        in: path
+        name: report-id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Report'
+          description: Отчет о файле.
+        "400":
+          description: Предоставлен недействительный ID отчета.
+        "404":
+          description: Отчет не найден для предоставленного ID.
+        "500":
+          description: Ошибка сервера при обработке запроса.
+      summary: Получить отчет по конкретному файлу
+      x-openapi-router-controller: server.controllers.default_controller
+  /reports/{transaction_id}:
+    get:
+      operationId: reports_transaction_id_get
+      parameters:
+        - description: ID транзакции
+          explode: false
+          in: path
+          name: transaction_id
+          required: true
+          schema:
+            type: string
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Report'
+          description: Отчет о транзакции успешно получен.
+        "400":
+          description: Предоставлен недействительный ID транзакции.
+        "404":
+          description: Отчет не найден для предоставленного ID транзакции.
+        "500":
+          description: Ошибка сервера при обработке запроса.
+      summary: Получить отчет по конкретной транзакции
+      x-openapi-router-controller: server.controllers.default_controller
+  /upload:
+    post:
+      operationId: upload_post
+      requestBody:
+        $ref: '#/components/requestBodies/inline_object'
+        content:
+          multipart/form-data:
+            schema:
+              properties:
+                file:
+                  format: binary
+                  type: string
+              type: object
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+          description: Файл успешно загружен.
+        "400":
+          description: Предоставлен недействительный файл.
+        "500":
+          description: Ошибка сервера при обработке файла.
+      summary: Загрузить файл для анализа ошибок
+      x-openapi-router-controller: server.controllers.default_controller
+components:
+  requestBodies:
+    inline_object:
+      content:
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/inline_object'
+      required: true
+  schemas:
+    Report:
+      example:
+        reference: reference
+        filesCount: 6
+        checkedCount: 3
+        errorsCount: 1
+        files:
+        - filename: filename
+          id: 5
+          errors:
+          - subject: subject
+            line: 3
+            match: 7
+            description: description
+            id: 2
+            page: 9
+          - subject: subject
+            line: 3
+            match: 7
+            description: description
+            id: 2
+            page: 9
+        - filename: filename
+          id: 5
+          errors:
+          - subject: subject
+            line: 3
+            match: 7
+            description: description
+            id: 2
+            page: 9
+          - subject: subject
+            line: 3
+            match: 7
+            description: description
+            id: 2
+            page: 9
+        matchCount: 5
+        id: 0
+      properties:
+        id:
+          description: ID отчета.
+          title: id
+          type: integer
+        reference:
+          description: Ссылка на отчет.
+          title: reference
+          type: string
+        filesCount:
+          description: Количество файлов в отчете.
+          title: filesCount
+          type: integer
+        checkedCount:
+          description: Количество обработанных файлов.
+          title: checkedCount
+          type: integer
+        errorsCount:
+          description: Количество ошибок в отчете.
+          title: errorsCount
+          type: integer
+        matchCount:
+          description: Количество совпадений в отчете.
+          title: matchCount
+          type: integer
+        files:
+          items:
+            $ref: '#/components/schemas/File'
+          title: files
+          type: array
+      title: Report
+      type: object
+    File:
+      example:
+        filename: filename
+        id: 5
+        errors:
+        - subject: subject
+          line: 3
+          match: 7
+          description: description
+          id: 2
+          page: 9
+        - subject: subject
+          line: 3
+          match: 7
+          description: description
+          id: 2
+          page: 9
+      properties:
+        id:
+          description: ID файла.
+          title: id
+          type: integer
+        filename:
+          description: Имя файла.
+          title: filename
+          type: string
+        isChecked:
+          description: true если файл обработан
+          title: isChecked
+          type: boolean
+        errors:
+          items:
+            $ref: '#/components/schemas/Error'
+          title: errors
+          type: array
+      title: File
+      type: object
+    Error:
+      example:
+        subject: subject
+        line: 3
+        match: 7
+        description: description
+        id: 2
+        page: 9
+      properties:
+        id:
+          description: ID ошибки.
+          title: id
+          type: integer
+        description:
+          description: Описание ошибки.
+          title: description
+          type: string
+        subject:
+          description: Тема ошибки.
+          title: subject
+          type: string
+        match:
+          description: Совпадение ошибки.
+          title: match
+          type: integer
+        page:
+          description: Номер страницы ошибки в файле.
+          title: page
+          type: integer
+        line:
+          description: Номер строки ошибки в файле.
+          title: line
+          type: integer
+      title: Error
+      type: object
+    inline_object:
+      properties:
+        file:
+          format: binary
+          type: string
+      type: object
+    inline_response_200:
+      example:
+        id: 0
+      properties:
+        id:
+          description: ID загруженного файла.
+          title: id
+          type: integer
+      title: inline_response_200
+      type: object

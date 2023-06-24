@@ -1,0 +1,32 @@
+POST /upload # жду список файлов
+GET /report
+{
+  "id": 123,
+  "reference": "ref",
+  "filesCount": 123,
+  "checkedCount": 123,
+  "errorsCount": 123,
+  "matchCount": 123,
+
+  "files": [
+    {
+      "id": 123,
+      "filename": "filename",
+      "isChecked": False,
+      "errors": [
+        {
+          "id": 123,
+          "description": "desc",
+          "subject": "kjh",
+          "match": 123,
+          "page": 123,
+          "line": 123
+        }
+      ]
+    }
+  ]
+}
+
+GET /get-csv/{transaction_id}
+GET /get-pdf/{transaction_id}
+{"id":  123}
