@@ -6,6 +6,8 @@ import pdfkit
 import six
 from werkzeug.utils import secure_filename
 from flask import request, send_from_directory
+
+from server.main import make_report
 from server.models.inline_response200 import InlineResponse200  # noqa: E501
 from server.models.report import Report  # noqa: E501
 from server import util
@@ -29,8 +31,8 @@ def get_csv_transaction_id_get(transaction_id):  # noqa: E501
     transaction = db_models.Transaction.get(db_models.Transaction.id == transaction_id)
 
     reports = transaction.reports
-    file = f"report-{transaction_id}.csv"
-
+    file = f"report-csv-{transaction_id}.csv"
+    print(file)
     return send_from_directory(f'files/report', file, as_attachment=True), 200
 
 
@@ -47,7 +49,7 @@ def get_pdf_transaction_id_get(transaction_id):  # noqa: E501
     transaction = db_models.Transaction.get(db_models.Transaction.id == transaction_id)
 
     reports = transaction.reports
-    file = f"report-{transaction_id}.pdf"
+    file = f"report-pdf-{transaction_id}.zip"
 
     return send_from_directory(f'files/report',  file, as_attachment=True), 200
 
@@ -74,12 +76,13 @@ def reports_transaction_id_get(transaction_id):
     for db_report in reports:
         report = Report(reference=db_report.reference,
                         files_count=db_report.files_count,
-                        checked_count=len(list(filter(lambda x: x.is_checked, db_report.files))),
+                        checked_count=db_report.checked_count,
+                        errors_count=db_report.errors_count,
                         match_count=db_report.match_count,
                         files=parsers.db_files_to_files(db_report.files))
         result.append(report)
 
-    return result, 200
+    return report, 200
 
 
 @cross_origin()
@@ -134,4 +137,5 @@ def upload_post(file=None):  # noqa: E501
                 return f"File uploading error: {e}", 500
     report.files_count = files_count
     report.save()
+    make_report(transaction_id)
     return {"transaction_id": transaction_id}, 200

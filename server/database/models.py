@@ -18,6 +18,7 @@ class Report(BaseModel):
     transaction = ForeignKeyField(Transaction, backref='reports')
     reference = CharField(null=True)
     files_count = IntegerField(null=True)
+    checked_count = IntegerField(null=True)
     errors_count = IntegerField(null=True)
     match_count = IntegerField(null=True)
 
