@@ -159,6 +159,7 @@ def make_report(transaction_id):
 
         reference = None
         errors_count = 0
+        global_errors = []
         for file in report.files:
             cnt += 1
             if reference is None:
@@ -167,6 +168,7 @@ def make_report(transaction_id):
             pdf_files.append(f"files/report/part-{cnt}-{transaction_id}.pdf")
             errors = analyze_file("files/client/" + file.filename, f"files/report/part-{cnt}-{transaction_id}.pdf",
                                   reference)
+            global_errors += errors
             for error in errors:
                 errors_count += 1
                 Error.create(page=error['page'],
@@ -185,7 +187,7 @@ def make_report(transaction_id):
                 zipf.write(file)
 
         # csv
-        df = pd.DataFrame(errors, columns=['filename', 'page', 'match', 'lev', 'subject', 'description'])
+        df = pd.DataFrame(global_errors, columns=['filename', 'page', 'match', 'lev', 'subject', 'description'])
         with open(f"files/report/report-csv-{transaction_id}.csv", 'w') as f:
             df.to_csv(f, index=False)
 
