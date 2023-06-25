@@ -17,7 +17,7 @@ paths:
         name: transaction_id
         required: true
         schema:
-          type: integer
+          type: string
         style: simple
       responses:
         "200":
