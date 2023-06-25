@@ -23,19 +23,6 @@
 
 Перед тем, как развернуть у себя сервис необходимо установить [Docker](https://docs.docker.com/get-docker/) и [Docker Compose](https://docs.docker.com/compose/install) на вашу машину.
 
-Далее, необходимо выполнить следующие действия:
-
-```bash
-# Клонируем репозиторий
-git clone -b main https://github.com/Sapf3ar/case1.git
-# Переходим в папку с проектом
-cd MISIS_AI_Lab_Xmas/dockerItems
-# Запускаем сервис
-docker-compose up -d
-```
-
-Теперь вы можете открыть в браузере [localhost](http://localhost:80) и увидеть работающий сервис.  
-
 ### Структура проекта
 
 Репозиторий состоит из следующих папок:
