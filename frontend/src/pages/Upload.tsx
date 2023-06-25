@@ -2,11 +2,12 @@ import { observer } from 'mobx-react-lite';
 
 // import { useStores } from '../hooks/useStores';
 
-import { Breadcrumb, Layout } from 'antd';
+import { Breadcrumb, Button, Layout } from 'antd';
 import FileUpload from '../components/FileUpload';
 
 import { Typography } from 'antd';
 import ReportStatus from '../components/ReportStatus';
+import { Link } from 'react-router-dom';
 
 const { Title } = Typography;
 
@@ -28,15 +29,21 @@ const Upload = observer(() => {
                 }}
             >
                 <div className='demo-logo' />
-                {/* <Menu
-                    theme='dark'
-                    mode='horizontal'
-                    defaultSelectedKeys={['2']}
-                    items={new Array(3).fill(null).map((_, index) => ({
-                        key: String(index + 1),
-                        label: `nav ${index + 1}`,
-                    }))}
-                /> */}
+                <Link to='/'>
+                    <Button className='file-upload__button' type='primary' size='large'>
+                        Загрузка файлов
+                    </Button>
+                </Link>
+                {/* <Link to='/'>
+                    <Button
+                        style={{ marginLeft: 20 }}
+                        className='file-upload__button'
+                        type='primary'
+                        size='large'
+                    >
+                        Пример отчета
+                    </Button>
+                </Link> */}
             </Header>
             <Content className='site-layout' style={{ padding: '0 50px' }}>
                 <Breadcrumb style={{ margin: '16px 0' }}>

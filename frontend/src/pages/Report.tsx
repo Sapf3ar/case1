@@ -22,7 +22,7 @@ import { DownloadOutlined } from '@ant-design/icons';
 import FileList from '../components/FileList';
 
 import { SettingOutlined } from '@ant-design/icons';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import FileErrors from '../components/FileErrors';
 import { API_URL } from '../config';
 
@@ -114,6 +114,21 @@ const Report = observer(() => {
                 }}
             >
                 <div className='demo-logo' />
+                <Link to='/'>
+                    <Button className='file-upload__button' type='primary' size='large'>
+                        Загрузка файлов
+                    </Button>
+                </Link>
+                {/* <Link to='/'>
+                    <Button
+                        style={{ marginLeft: 20 }}
+                        className='file-upload__button'
+                        type='primary'
+                        size='large'
+                    >
+                        Пример отчета
+                    </Button>
+                </Link> */}
             </Header>
             <Content className='site-layout' style={{ padding: '0 50px' }}>
                 <Breadcrumb style={{ margin: '16px 0' }}>
@@ -150,7 +165,7 @@ const Report = observer(() => {
                             <Card bordered={false}>
                                 <Statistic
                                     title='Обработано файлов'
-                                    value={rootStore.report?.filesCount}
+                                    value={rootStore.report?.checkedCount}
                                     precision={0}
                                     valueStyle={{ color: '#3f8600' }}
                                 />
@@ -159,8 +174,8 @@ const Report = observer(() => {
                         <Col span={3}>
                             <Card bordered={false}>
                                 <Statistic
-                                    title='Найдено совпадений'
-                                    value={rootStore.report?.matchCount}
+                                    title='Всего файлов'
+                                    value={rootStore.report?.filesCount}
                                     precision={0}
                                     valueStyle={{ color: '#3f8600' }}
                                 />
